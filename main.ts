@@ -21,6 +21,13 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 scene.onOverlapTile(SpriteKind.Player, sprites.builtin.coral2, function (sprite, location) {
     game.over(false)
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, location) {
+    tiles.setTileAt(tiles.getTileLocation(71, 7), assets.tile`transparency16`)
+    tiles.setTileAt(tiles.getTileLocation(71, 8), assets.tile`transparency16`)
+    tiles.setTileAt(tiles.getTileLocation(71, 9), assets.tile`transparency16`)
+    tiles.setTileAt(tiles.getTileLocation(71, 10), assets.tile`transparency16`)
+    tiles.setTileAt(location, assets.tile`transparency16`)
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     pointer_direction = 1
 })
