@@ -1,3 +1,9 @@
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile15`, function (sprite, location) {
+    game.over(false)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile13`, function (sprite, location) {
+    jetpack_mode = 0
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (pointer_direction == 1) {
         for (let index = 0; index < 100; index++) {
@@ -24,10 +30,15 @@ scene.onOverlapTile(SpriteKind.Player, sprites.builtin.coral0, function (sprite,
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
     info.changeScoreBy(1)
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile14`, function (sprite, location) {
+    jetpack_mode = 1
+})
 let laser_stun = 0
 let is_jetpacking = 0
 let mySprite: Sprite = null
 let pointer_direction = 0
+let jetpack_mode = 0
+jetpack_mode = 1
 pointer_direction = 0
 info.setScore(100)
 mySprite = sprites.create(img`
@@ -190,31 +201,39 @@ forever(function () {
     scene.cameraFollowSprite(mySprite)
 })
 forever(function () {
-    if (controller.up.isPressed()) {
-        if (laser_stun == 0) {
-            mySprite.ay = 0
-            mySprite.vy = -70
-            info.changeScoreBy(-1)
-            is_jetpacking = 1
+    controller.moveSprite(mySprite, 100, 0)
+})
+forever(function () {
+    if (jetpack_mode == 1) {
+        if (controller.up.isPressed()) {
+            if (laser_stun == 0) {
+                mySprite.ay = 0
+                mySprite.vy = -70
+                info.changeScoreBy(-1)
+                is_jetpacking = 1
+            }
+        } else {
+            mySprite.ay = 150
+            is_jetpacking = 0
+        }
+        if (info.score() == 0) {
+            mySprite.destroy(effects.fire, 500)
+            info.setScore(0)
+            game.over(false)
+        }
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile7`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile`))) {
+            mySprite.ay = 150
+            is_jetpacking = 0
+            laser_stun = 1
         }
     } else {
-        mySprite.ay = 150
-        is_jetpacking = 0
-    }
-    if (info.score() == 0) {
-        mySprite.destroy(effects.fire, 500)
-        info.setScore(0)
-        game.over(false)
-    }
-    if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile8`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile7`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile`))) {
-        mySprite.ay = 150
-        is_jetpacking = 0
-        laser_stun = 1
+        if (controller.up.isPressed()) {
+            if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+                mySprite.vy = -100
+            }
+        }
     }
     if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile3`) || (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile4`) || mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile6`))) {
         game.over(false)
     }
-})
-forever(function () {
-    controller.moveSprite(mySprite, 100, 0)
 })
