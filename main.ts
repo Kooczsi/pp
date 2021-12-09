@@ -205,10 +205,10 @@ game.onUpdateInterval(250, function () {
     }
 })
 forever(function () {
-    scene.cameraFollowSprite(mySprite)
+    controller.moveSprite(mySprite, 100, 0)
 })
 forever(function () {
-    controller.moveSprite(mySprite, 100, 0)
+    scene.cameraFollowSprite(mySprite)
 })
 forever(function () {
     if (jetpack_mode == 1) {
